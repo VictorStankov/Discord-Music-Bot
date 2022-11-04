@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Config file
+config.cfg
+
+# Large folders
+/ffmpeg
+
+# PyCharm files
+/.idea
