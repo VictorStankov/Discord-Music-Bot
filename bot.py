@@ -22,18 +22,18 @@ async def on_ready(ctx: discord.Message, url: str) -> None:
     :return: None
     """
     if ctx.author.voice is not None:
-        filename = download_youtube(url)
+        filepath = download_youtube(url)
 
         channel: discord.VoiceChannel = ctx.author.voice.channel
         vc: discord.VoiceClient = await channel.connect()
 
         vc.play(discord.FFmpegPCMAudio(
-            executable=os.path.curdir + "\\ffmpeg\\bin\\ffmpeg.exe", source=filename))
+            executable=os.path.curdir + "\\ffmpeg\\bin\\ffmpeg.exe", source=filepath))
 
         while vc.is_playing():
             await sleep(5)
 
-        os.remove(filename)
+        os.remove(filepath)
         await vc.disconnect()
     else:
         await ctx.channel.send(content="Voice channel not found! :angry:")
@@ -43,7 +43,7 @@ def download_youtube(url: str) -> str:
     """
     Downloads the YouTube video as an .mp3 file.
     :param url: URL for the video
-    :return: Filename of the downloaded .mp3 file
+    :return: Filepath of the downloaded .mp3 file
     """
 
     yt: YouTube = YouTube(url)
