@@ -48,7 +48,7 @@ def download_youtube(url: str) -> str:
 
     yt: YouTube = YouTube(url)
     video: pytube.query.Stream = yt.streams.filter(only_audio=True).first()
-    out_file: str = video.download(output_path=os.path.curdir)  # Downloads only audio but in .mp4 format
+    out_file: str = video.download(output_path=os.path.curdir + '\\media')  # Downloads only audio but in .mp4 format
 
     base, ext = os.path.splitext(out_file)
     new_file = base + '.mp3'
