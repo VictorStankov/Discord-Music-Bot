@@ -58,11 +58,12 @@ async def on_ready(ctx: discord.Message, url: str) -> None:
 
         is_playing = False
 
-def download_youtube(url: str) -> str:
+
+def download_youtube(url: str) -> Tuple[str, int]:
     """
     Downloads the YouTube video as an .mp3 file.
     :param url: URL for the video
-    :return: Filepath of the downloaded .mp3 file
+    :return: Filepath and length of the downloaded .mp3 file
     """
 
     yt: YouTube = YouTube(url)
@@ -76,7 +77,7 @@ def download_youtube(url: str) -> str:
         os.remove(new_file)  # Check if the file already exists. Overwriting is not possible
     os.rename(out_file, new_file)
 
-    return new_file
+    return new_file, yt.length
 
 
 client.run(token)
