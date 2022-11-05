@@ -1,7 +1,7 @@
 import os
 from asyncio import sleep
-from typing import Union, Tuple
 from queue import Queue
+from typing import Union, Tuple
 
 import discord
 import pytube
