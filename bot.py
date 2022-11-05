@@ -21,20 +21,15 @@ async def on_ready(ctx: discord.Message, url: str) -> None:
     :param url: URL of the video
     :return: None
     """
-    if ctx.author.voice is not None:
-        filepath = download_youtube(url)
-
-        channel: discord.VoiceChannel = ctx.author.voice.channel
-        vc: discord.VoiceClient = await channel.connect()
 
         vc.play(discord.FFmpegPCMAudio(
             executable=os.path.curdir + "\\ffmpeg\\bin\\ffmpeg.exe", source=filepath))
 
-        while vc.is_playing():
-            await sleep(5)
-
-        os.remove(filepath)
-        await vc.disconnect()
+    channel: Union[discord.VoiceClient, None] = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if channel is not None and channel.is_connected() is True:
+        vc: discord.VoiceClient = channel
+    elif ctx.author.voice is not None:
+        vc: discord.VoiceClient = await ctx.author.voice.channel.connect(self_deaf=True)
     else:
         await ctx.channel.send(content="Voice channel not found! :angry:")
 
