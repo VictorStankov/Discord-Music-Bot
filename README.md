@@ -1,7 +1,7 @@
 # Discord-Music-Bot
 
 I just want my YouTube music, man :(  
-![GIF](https://tenor.com/view/rick-and-morty-rick-sad-sitting-lonely-gif-25485281.gif)
+![GIF](./misc/rick-and-morty-rick.gif)
 
 Things left to do:
 - Bot features:
