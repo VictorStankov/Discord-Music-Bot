@@ -1,5 +1,7 @@
 import os
 from asyncio import sleep
+from typing import Union, Tuple
+from queue import Queue
 
 import discord
 import pytube
@@ -10,6 +12,9 @@ from config import token
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='!', intents=intents)
+
+song_queue = Queue()
+is_playing = False
 
 
 @client.command(name='play')
@@ -22,8 +27,7 @@ async def on_ready(ctx: discord.Message, url: str) -> None:
     :return: None
     """
 
-        vc.play(discord.FFmpegPCMAudio(
-            executable=os.path.curdir + "\\ffmpeg\\bin\\ffmpeg.exe", source=filepath))
+    global is_playing
 
     channel: Union[discord.VoiceClient, None] = discord.utils.get(client.voice_clients, guild=ctx.guild)
     if channel is not None and channel.is_connected() is True:
@@ -32,7 +36,27 @@ async def on_ready(ctx: discord.Message, url: str) -> None:
         vc: discord.VoiceClient = await ctx.author.voice.channel.connect(self_deaf=True)
     else:
         await ctx.channel.send(content="Voice channel not found! :angry:")
+        return
 
+    filepath, file_length = download_youtube(url)
+    song_queue.put((filepath, file_length))
+
+    if is_playing is False:
+        is_playing = True
+        while not song_queue.empty():
+            song, length = song_queue.get()
+            vc.play(
+                discord.FFmpegPCMAudio(
+                    executable=os.curdir + "\\ffmpeg\\bin\\ffmpeg.exe",
+                    source=song
+                )
+            )
+            await sleep(length + 3)
+            os.remove(song)
+
+        await vc.disconnect()
+
+        is_playing = False
 
 def download_youtube(url: str) -> str:
     """

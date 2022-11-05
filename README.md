@@ -5,9 +5,9 @@ I just want my YouTube music, man :(
 
 Things left to do:
 - Bot features:
-  - [ ] Queue system for songs
+  - [x] Queue system for songs
   - [ ] Search by video name functionality
-  - [ ] Check if the bot is currently connected to a voice channel (If another user is in a different channel,
+  - [x] Check if the bot is currently connected to a voice channel (If another user is in a different channel,
   the bot will leave the current channel)
 - Basic functionalities:
   - [ ] URL checking
