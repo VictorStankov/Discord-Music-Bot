@@ -18,7 +18,7 @@ is_playing = False
 
 
 @client.command(name='play')
-async def on_ready(ctx: discord.Message, url: str) -> None:
+async def play(ctx: discord.Message, url: str) -> None:
     """
     Command that triggers the bot to download a YouTube video and play it in the voice channel, which the author of the
     command is connected to.
