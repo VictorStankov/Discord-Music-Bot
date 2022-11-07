@@ -80,4 +80,5 @@ def download_youtube(url: str) -> Tuple[str, int]:
     return new_file, yt.length
 
 
+print(discord.utils.oauth_url(client_id=client.application_id))
 client.run(token)
