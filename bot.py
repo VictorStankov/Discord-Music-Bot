@@ -59,8 +59,7 @@ async def play(ctx: Message, url: str) -> None:
 
         is_playing = False
 
-
-def download_youtube(url: str) -> Tuple[str, int]:
+async def download_youtube(url: str) -> Tuple[str, int]:
     """
     Downloads the YouTube video as an .mp3 file.
     :param url: URL for the video
