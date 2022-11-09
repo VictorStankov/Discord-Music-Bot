@@ -80,5 +80,33 @@ async def download_youtube(url: str) -> Tuple[str, int]:
     return new_file, yt.length
 
 
+async def connect_channel(ctx: Message) -> Union[VoiceClient, None]:
+    channel: Union[VoiceClient, None] = ctx.guild.voice_client
+    if channel is not None and channel.is_connected() is True:
+        return channel
+    elif ctx.author.voice is not None:
+        return await ctx.author.voice.channel.connect(self_deaf=True)
+    return None
+
+
+async def play_in_channel(vc: VoiceClient) -> None:
+    global is_playing
+
+    is_playing = True
+    while not song_queue.empty():
+        song, length, delete = song_queue.get()
+        vc.play(
+            FFmpegPCMAudio(
+                executable=ffmpeg_location,
+                source=song
+            )
+        )
+        await sleep(length + 3)
+
+        if delete:
+            os.remove(song)
+
+    is_playing = False
+
 print(discord.utils.oauth_url(client_id=client.application_id))
 client.run(token)
