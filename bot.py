@@ -30,34 +30,14 @@ async def play(ctx: Message, url: str) -> None:
 
     global is_playing
 
-    channel: Union[discord.VoiceClient, None] = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    if channel is not None and channel.is_connected() is True:
-        vc: discord.VoiceClient = channel
-    elif ctx.author.voice is not None:
-        vc: discord.VoiceClient = await ctx.author.voice.channel.connect(self_deaf=True)
-    else:
-        await ctx.channel.send(content="Voice channel not found! :angry:")
-        return
+    vc: Union[VoiceClient, None] = await connect_channel(ctx=ctx)
 
-    filepath, file_length = download_youtube(url)
-    song_queue.put((filepath, file_length))
+    filepath, file_length = await download_youtube(url)
+    song_queue.put((filepath, file_length, True))
 
-    if is_playing is False:
-        is_playing = True
-        while not song_queue.empty():
-            song, length = song_queue.get()
-            vc.play(
-                discord.FFmpegPCMAudio(
-                    executable=ffmpeg_location,
-                    source=song
-                )
-            )
-            await sleep(length + 3)
-            os.remove(song)
+    if not is_playing:
+        await play_in_channel(vc=vc)
 
-        await vc.disconnect()
-
-        is_playing = False
 
 async def download_youtube(url: str) -> Tuple[str, int]:
     """
