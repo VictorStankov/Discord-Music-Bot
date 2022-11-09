@@ -4,6 +4,7 @@ from queue import Queue
 from typing import Union, Tuple
 
 import discord
+from discord import Message, VoiceChannel, VoiceClient, FFmpegPCMAudio
 import pytube
 from discord.ext import commands
 from pytube import YouTube
@@ -18,7 +19,7 @@ is_playing = False
 
 
 @client.command(name='play')
-async def play(ctx: discord.Message, url: str) -> None:
+async def play(ctx: Message, url: str) -> None:
     """
     Command that triggers the bot to download a YouTube video and play it in the voice channel, which the author of the
     command is connected to.
