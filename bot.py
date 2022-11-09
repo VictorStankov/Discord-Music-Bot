@@ -18,6 +18,39 @@ song_queue = Queue()
 is_playing = False
 
 
+@client.command(name='join')
+async def join(ctx: Message) -> None:
+    if ctx.guild.voice_client is not None:
+        async with ctx.channel.typing():
+            await ctx.reply(content='Already joined! :rage:')
+            return
+
+    vc: Union[VoiceClient, None] = await connect_channel(ctx=ctx)
+
+    if vc is None:
+        async with ctx.channel.typing():
+            await ctx.reply(content="Voice channel not found! :angry:")
+            return
+
+    song_queue.put(('./misc/slavi.wav', 39, False))
+
+    if not is_playing:
+        await play_in_channel(vc=vc)
+
+
+@client.command(name='dc')
+async def disconnect(ctx: Message) -> None:
+    global is_playing
+
+    if ctx.guild.voice_client is not None:
+        is_playing = False
+        await ctx.guild.voice_client.disconnect(force=True)
+        return
+
+    async with ctx.channel.typing():
+        await ctx.channel.send(content='I\'m not even connected! :triumph:')
+
+
 @client.command(name='play')
 async def play(ctx: Message, url: str) -> None:
     """
