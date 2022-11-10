@@ -4,8 +4,8 @@ from queue import Queue
 from typing import Union, Tuple
 
 import discord
-from discord import Message, VoiceChannel, VoiceClient, FFmpegPCMAudio
 import pytube
+from discord import Message, VoiceClient, FFmpegPCMAudio, Member, VoiceState
 from discord.ext import commands
 from pytube import YouTube
 
@@ -24,7 +24,7 @@ async def on_ready():
 
 
 @client.event
-async def on_voice_state_update(member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
     if after.channel is None and member.guild.voice_client is not None:
         if len(before.channel.members) == 1:
             global is_playing
