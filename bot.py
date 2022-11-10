@@ -44,6 +44,7 @@ async def disconnect(ctx: Message) -> None:
 
     if ctx.guild.voice_client is not None:
         is_playing = False
+        song_queue.empty()
         await ctx.guild.voice_client.disconnect(force=True)
         return
 
