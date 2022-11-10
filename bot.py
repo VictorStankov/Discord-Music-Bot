@@ -12,7 +12,7 @@ from pytube import YouTube
 from config import token, ffmpeg_location
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix='!', intents=intents)
+client = commands.Bot(command_prefix='!', intents=intents, case_insensitive=True)
 
 song_queue = Queue()
 is_playing = False
