@@ -18,6 +18,11 @@ song_queue = Queue()
 is_playing = False
 
 
+@client.event
+async def on_ready():
+    print(discord.utils.oauth_url(client_id=client.application_id))
+
+
 @client.command(name='join')
 async def join(ctx: Message) -> None:
     if ctx.guild.voice_client is not None:
@@ -122,5 +127,4 @@ async def play_in_channel(vc: VoiceClient) -> None:
 
     is_playing = False
 
-print(discord.utils.oauth_url(client_id=client.application_id))
 client.run(token)
