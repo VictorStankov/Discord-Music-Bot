@@ -38,7 +38,7 @@ async def join(ctx: Message) -> None:
         await play_in_channel(vc=vc)
 
 
-@client.command(name='dc')
+@client.command(name="disconnect", aliases=['dc', 'leave'])
 async def disconnect(ctx: Message) -> None:
     global is_playing
 
