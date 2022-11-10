@@ -23,6 +23,17 @@ async def on_ready():
     print(discord.utils.oauth_url(client_id=client.application_id))
 
 
+@client.event
+async def on_voice_state_update(member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+    if after.channel is None and member.guild.voice_client is not None:
+        if len(before.channel.members) == 1:
+            global is_playing
+
+            is_playing = False
+            song_queue.empty()
+            await member.guild.voice_client.disconnect(force=False)
+
+
 @client.command(name='join')
 async def join(ctx: Message) -> None:
     if ctx.guild.voice_client is not None:
