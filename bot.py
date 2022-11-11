@@ -42,7 +42,7 @@ async def on_voice_state_update(member: Member, before: VoiceState, after: Voice
     # member.guild.voice_client returns either the channel the bot is connected in the particular server or None.
     if after.channel is None and member.guild.voice_client is not None:
         # Check if the user left the channel that the bot is currently in and whether the bot is alone.
-        if after.channel == member.guild.voice_client.channel and len(before.channel.members) == 1:
+        if before.channel == member.guild.voice_client.channel and len(before.channel.members) == 1:
             global is_playing
 
             is_playing = False
