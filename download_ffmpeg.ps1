@@ -1,4 +1,4 @@
-if (!Test-Path .\ffmpeg)
+if (-Not (Test-Path .\ffmpeg))
 {
 	$ProgressPreference = 'SilentlyContinue'
 	Invoke-WebRequest 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip' -OutFile .\ffmpeg.zip
