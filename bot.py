@@ -26,7 +26,8 @@ async def on_ready():
 @client.event
 async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
     if after.channel is None and member.guild.voice_client is not None:
-        if len(before.channel.members) == 1:
+        # Check if the user left the channel that the bot is currently in and whether the bot is alone.
+        if after.channel == member.guild.voice_client.channel and len(before.channel.members) == 1:
             global is_playing
 
             is_playing = False
