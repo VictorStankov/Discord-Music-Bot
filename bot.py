@@ -14,17 +14,32 @@ from config import token, ffmpeg_location
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='!', intents=intents, case_insensitive=True)
 
-song_queue = Queue()
+song_queue: Queue[Tuple[str, int, bool]] = Queue()
 is_playing = False
 
 
 @client.event
-async def on_ready():
+async def on_ready() -> None:
+    """
+    Function that prints an invitation URL after the bot is loaded.
+    :return: None
+    """
+
     print(discord.utils.oauth_url(client_id=client.application_id))
 
 
 @client.event
-async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
+async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState) -> None:
+    """
+    Function that gets triggered every time someone leaves/enters a channel. It checks whether a user has disconnected
+    and the bot is left alone in a channel. If so, it disconnects it automatically.
+    :param member: Member who changed their voice state
+    :param before: Voice state before the change
+    :param after: Voice state after the change
+    :return: None
+    """
+
+    # member.guild.voice_client returns either the channel the bot is connected in the particular server or None.
     if after.channel is None and member.guild.voice_client is not None:
         # Check if the user left the channel that the bot is currently in and whether the bot is alone.
         if after.channel == member.guild.voice_client.channel and len(before.channel.members) == 1:
@@ -37,6 +52,12 @@ async def on_voice_state_update(member: Member, before: VoiceState, after: Voice
 
 @client.command(name='join')
 async def join(ctx: Message) -> None:
+    """
+    Command that makes the bot join the channel and play an iconic theme song.
+    :param ctx: Message context
+    :return: None
+    """
+
     if ctx.guild.voice_client is not None:
         async with ctx.channel.typing():
             await ctx.reply(content='Already joined! :rage:')
@@ -57,6 +78,12 @@ async def join(ctx: Message) -> None:
 
 @client.command(name="disconnect", aliases=['dc', 'leave'])
 async def disconnect(ctx: Message) -> None:
+    """
+    Commands that make the bot disconnect from the current channel, clearing the song queue in the process.
+    :param ctx: Message context
+    :return: None
+    """
+
     global is_playing
 
     if ctx.guild.voice_client is not None:
@@ -84,6 +111,8 @@ async def play(ctx: Message, url: str) -> None:
     vc: Union[VoiceClient, None] = await connect_channel(ctx=ctx)
 
     filepath, file_length = await download_youtube(url)
+
+    # The last parameter is whether the file should be deleted after it is played.
     song_queue.put((filepath, file_length, True))
 
     if not is_playing:
@@ -112,7 +141,15 @@ async def download_youtube(url: str) -> Tuple[str, int]:
 
 
 async def connect_channel(ctx: Message) -> Union[VoiceClient, None]:
+    """
+    Function that tries to connect to a voice channel. First it checks whether the bot is already connected and if not,
+    it tries connecting to the user's voice channel.
+    :param ctx: Message context
+    :return: Union[VoiceClient, None]
+    """
+
     channel: Union[VoiceClient, None] = ctx.guild.voice_client
+
     if channel is not None and channel.is_connected() is True:
         return channel
     elif ctx.author.voice is not None:
@@ -121,6 +158,12 @@ async def connect_channel(ctx: Message) -> Union[VoiceClient, None]:
 
 
 async def play_in_channel(vc: VoiceClient) -> None:
+    """
+    Function that starts taking songs from the queue and plays them in the provided voice channel.
+    :param vc: Voice channel where the bot should play
+    :return: None
+    """
+
     global is_playing
 
     is_playing = True
