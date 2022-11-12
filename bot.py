@@ -1,3 +1,5 @@
+from youtubesearchpython.__future__ import VideosSearch
+
 import os
 from asyncio import sleep
 from queue import Queue
@@ -10,6 +12,7 @@ from discord.ext import commands
 from pytube import YouTube
 
 from config import token, ffmpeg_location
+import validators
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='!', intents=intents, case_insensitive=True)
@@ -97,18 +100,31 @@ async def disconnect(ctx: Message) -> None:
 
 
 @client.command(name='play')
-async def play(ctx: Message, url: str) -> None:
+async def play(ctx: Message, *args) -> None:
     """
     Command that triggers the bot to download a YouTube video and play it in the voice channel, which the author of the
     command is connected to.
     :param ctx: Message context
-    :param url: URL of the video
+    :param args: captures the URL / name of the video
     :return: None
     """
 
     global is_playing
 
+    url = ' '.join(args)
     vc: Union[VoiceClient, None] = await connect_channel(ctx=ctx)
+
+    if vc is None:
+        async with ctx.channel.typing():
+            await ctx.reply(content="Voice channel not found! :angry:")
+            return
+
+    # If the url is not directly provided, search for it
+    if not validators.url(url):
+        videos_search = VideosSearch(url, limit=1)
+        # Interestingly .next() returns ALL results
+        videos_result = await videos_search.next()
+        url = videos_result['result'][0]['link']
 
     filepath, file_length = await download_youtube(url)
 
