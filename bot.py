@@ -126,7 +126,13 @@ async def play(ctx: Message, *args) -> None:
         videos_result = await videos_search.next()
         url = videos_result['result'][0]['link']
 
-    filepath, file_length = await download_youtube(url)
+    filepath, file_length, title, thumbnail = await download_youtube(url)
+    last_slash = thumbnail.rfind('/')
+    thumbnail = thumbnail[:last_slash] + '/mqdefault.jpg'
+
+    # Send a cool embedded message with song details and url
+    embedded_message = await create_embedded_message(title, url, thumbnail, ctx.author.avatar, ctx.author.name)
+    await ctx.channel.send(embed=embedded_message)
 
     # The last parameter is whether the file should be deleted after it is played.
     song_queue.put((filepath, file_length, True))
@@ -135,7 +141,18 @@ async def play(ctx: Message, *args) -> None:
         await play_in_channel(vc=vc)
 
 
-async def download_youtube(url: str) -> Tuple[str, int]:
+async def create_embedded_message(title, url, thumbnail, author_avatar, author_name) -> discord.Embed:
+    embed = discord.Embed(
+        title='Now Playing',
+        url='{}'.format(url),
+        description='{}'.format(title)
+    )
+    embed.set_thumbnail(url=thumbnail)
+    embed.set_author(name=author_name, icon_url=author_avatar)
+    return embed
+
+
+async def download_youtube(url: str) -> Tuple[str, int, str, str]:
     """
     Downloads the YouTube video as an .mp3 file.
     :param url: URL for the video
@@ -153,7 +170,7 @@ async def download_youtube(url: str) -> Tuple[str, int]:
         os.remove(new_file)  # Check if the file already exists. Overwriting is not possible
     os.rename(out_file, new_file)
 
-    return new_file, yt.length
+    return new_file, yt.length, yt.title, yt.thumbnail_url
 
 
 async def connect_channel(ctx: Message) -> Union[VoiceClient, None]:
