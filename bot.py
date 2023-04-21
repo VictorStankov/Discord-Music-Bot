@@ -142,10 +142,10 @@ async def play(ctx: Message, *args) -> None:
 
 
 async def create_embedded_message(title, url, thumbnail, author_avatar, author_name) -> discord.Embed:
+    # The song title in the square brackets is rendered with hyperlink to the url in the parentheses
     embed = discord.Embed(
         title='Now Playing',
-        url='{}'.format(url),
-        description='{}'.format(title)
+        description=f'[{title}]({url})'
     )
     embed.set_thumbnail(url=thumbnail)
     embed.set_author(name=author_name, icon_url=author_avatar)
