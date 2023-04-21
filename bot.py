@@ -15,7 +15,7 @@ from config import token, ffmpeg_location
 import validators
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix='!', intents=intents, case_insensitive=True)
+client = commands.Bot(command_prefix='s', intents=intents, case_insensitive=True)
 
 song_queue: Queue[Tuple[str, int, bool]] = Queue()
 is_playing = False
