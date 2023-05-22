@@ -7,8 +7,9 @@ from typing import Union, Tuple
 
 import discord
 import pytube
-from discord import Message, VoiceClient, FFmpegPCMAudio, Member, VoiceState
+from discord import Message, VoiceClient, FFmpegPCMAudio, Member, VoiceState, Permissions
 from discord.ext import commands
+from discord.utils import oauth_url
 from pytube import YouTube
 
 from config import token, ffmpeg_location
@@ -27,8 +28,12 @@ async def on_ready() -> None:
     Function that prints an invitation URL after the bot is loaded.
     :return: None
     """
-
-    print(discord.utils.oauth_url(client_id=client.application_id))
+    perms = ['read_messages', 'send_messages', 'read_message_history', 'add_reactions', 'connect', 'speak',
+             'use_voice_activation']
+    a = Permissions()
+    for perm in perms:  # Probably there's a prettier way of doing this
+        a.__setattr__(perm, True)
+    print(oauth_url(client_id=client.application_id, permissions=a))
 
 
 @client.event
