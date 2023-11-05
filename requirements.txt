@@ -1,6 +1,5 @@
-discord==2.2.3
-pytube==15.0.0
+discord
 PyNaCl~=1.5.0
 
-youtube-search-python~=1.6.6
+yt-dlp
 validators~=0.20.0

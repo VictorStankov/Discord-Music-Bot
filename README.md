@@ -10,6 +10,6 @@ Things left to do:
   - [x] Check if the bot is currently connected to a voice channel (If another user is in a different channel,
   the bot will leave the current channel)
 - Basic functionalities:
-  - [ ] URL checking
-  - [ ] Cache (so we don't have to download the same file over and over)
-  - [ ] Cache cleanup / More advanced cleanup of downloaded files
+  - [x] URL checking
+  - [x] Using file URLs instead of downloading music locally
+  - [ ] Players dictionary cleaned regularly

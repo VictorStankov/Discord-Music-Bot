@@ -1,3 +1,5 @@
 [Information]
 Token =
-Operating_System = Windows/Linux
+Operating_System = Windows | Linux
+logging_level = NOTSET | DEBUG | INFO | WARNING | ERROR | CRITICAL
+description =
