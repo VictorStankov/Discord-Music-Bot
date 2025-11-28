@@ -7,5 +7,5 @@ dependencies = [
     "discord~=2.3.2",
     "pynacl~=1.6.1",
     "validators~=0.35.0",
-    "yt-dlp~=2025.11.12",
+    "yt-dlp[default]~=2025.11.12",
 ]
