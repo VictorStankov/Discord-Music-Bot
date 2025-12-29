@@ -79,14 +79,18 @@ class BotCommands(commands.Cog):
         :param args: Music info - can be URL or title of the song
         :return: None
         """
-        vc = await BotCommands._get_voice_channel(ctx=ctx)
+        try:
+            vc = await BotCommands._get_voice_channel(ctx=ctx)
 
-        if not vc:
-            await ctx.reply("Voice channel not found! :angry:")
-            return
+            if not vc:
+                await ctx.reply("Voice channel not found! :angry:")
+                return
 
-        await MusicController.add_to_queue(ctx, ' '.join(args))
-        await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
+            await MusicController.add_to_queue(ctx, ' '.join(args))
+            await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
+        except Exception as e:
+            await ctx.reply('Something went wrong :\n{}'.format(e))
+            await ctx.message.add_reaction('\N{CROSS MARK}')
 
     @commands.command(brief=command_descriptions.get('leave'), aliases=['dc', 'disconnect'])
     async def leave(self, ctx: Context) -> None:
