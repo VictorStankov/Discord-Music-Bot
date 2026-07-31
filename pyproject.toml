@@ -4,8 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
-    "discord~=2.3.2",
-    "pynacl~=1.6.1",
-    "validators~=0.35.0",
-    "yt-dlp[default]~=2025.11.12",
+    "discord-py==2.7.1",
+    "pynacl==1.6.2",
+    "validators==0.35.0",
+    "yt-dlp[default]==2026.7.4",
+    "davey==0.1.6"
 ]
